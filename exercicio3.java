@@ -2,7 +2,7 @@ import java.util.*;
 
 public class exercicio3 {
 
-    private double calcS (double eps) {
+    public double calcS (double eps) {
         double S = 0.0;
         int k = 0;
         double current;

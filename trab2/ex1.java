@@ -43,7 +43,6 @@ class ex1 {
             if (fAnterior * fx < 0) {
                 // primeira raiz encontrada entre xAnterior e x
                 double raizAprox = (xAnterior + x) / 2.0;
-                // cria o intervalo com a amplitude desejada
                 double left = raizAprox - amplitude / 2.0;
                 double right = left + amplitude;
 
@@ -177,5 +176,51 @@ class ex1 {
     public static void main(String[] args) {
         ex1 myobj = new ex1();
 
+        System.out.println("\n--------------------------------------------------------");
+        System.out.println("         EXERCÍCIO 1 - MÉTODOS NUMÉRICOS");
+        System.out.println("         f(x) = sen(x^2) + 1.1 - e^(-x)");
+        System.out.println("--------------------------------------------------------\n");
+
+        // ===== ITEM (a) =====
+        System.out.println("--------------------------------------------------------");
+        System.out.println("ITEM (a) - Separação de raízes e intervalo I");
+        System.out.println("--------------------------------------------------------");
+
+        double[] intervaloI = myobj.encontrarIntervaloMenorRaiz();
+        if (intervaloI == null) {
+            System.err.println("Erro: não é possível encontrar o intervalo I " +
+                    "com a função dada.");
+            return;
+        }
+
+        double left = intervaloI[0];
+        double right = intervaloI[1];
+        double epsilon = 5e-9;
+
+        System.out.printf("Intervalo I = [%.10f, %.10f]\n", left, right);
+        System.out.printf("Amplitude = %.10f (10^-1)\n", right - left);
+        System.out.printf("f(%.10f) = %+.10e\n", left, myobj.funcaoFx(left));
+        System.out.printf("f(%.10f) = %+.10e\n", right, myobj.funcaoFx(right));
+        System.out.printf("f(left) * f(right) = %.10e, satisfazendo a " +
+                        "aplicabilidade de f(left)*f(right) < 0\n",
+                myobj.funcaoFx(left) * myobj.funcaoFx(right));
+        // ===== ITEM (b.i) - MOSTRAR CONDIÇÕES =====
+        //myobj.mostrarCondicoesBissecao(left, right);
+        //myobj.mostrarCondicoesNewton(left, right);
+
+        System.out.println("\n--------------------------------------------------------");
+        System.out.println("ITEM (b.ii) - utilizando epsilon = 5×10^-9");
+        System.out.println(
+                "--------------------------------------------------------\n");
+        System.out.println("─── MÉTODO DA BISSEÇÃO ───\n");
+        ansBissecao resBis = myobj.metodoBissecao(left, right, epsilon);
+        System.out.printf("\nRaiz: %.15f\n", resBis.raiz);
+        System.out.printf("Iterações: %d\n", resBis.nIteracoes);
+
+        System.out.println("\n─── MÉTODO DE NEWTON ───\n");
+        double x0 = left;
+        ansNewton resNewt = myobj.metodoNewton(x0, epsilon, 100);
+        System.out.printf("\nRaiz: %.15f\n", resNewt.raiz);
+        System.out.printf("Iterações: %d\n", resNewt.nIteracoes);
     }
 }

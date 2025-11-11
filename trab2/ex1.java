@@ -204,9 +204,52 @@ class ex1 {
         System.out.printf("f(left) * f(right) = %.10e, satisfazendo a " +
                         "aplicabilidade de f(left)*f(right) < 0\n",
                 myobj.funcaoFx(left) * myobj.funcaoFx(right));
-        // ===== ITEM (b.i) - MOSTRAR CONDIÇÕES =====
-        //myobj.mostrarCondicoesBissecao(left, right);
-        //myobj.mostrarCondicoesNewton(left, right);
+
+        System.out.println("\n--------------------------------------------------------");
+        System.out.println("ITEM (b.i) - condições de aplicabilidade");
+        System.out.println("--------------------------------------------------------\n");
+
+        System.out.println("─── MÉTODO DA BISSEÇÃO ───\n");
+
+        double fLeft = myobj.funcaoFx(left);
+        double fRight = myobj.funcaoFx(right);
+
+        System.out.println("Condição 1 - Continuidade:");
+        System.out.println("f(x) = sen(x^2) + 1.1 - e^(-x) é contínua, pois é composta");
+        System.out.println("por funções contínuas (seno, exp e polinômios).");
+        System.out.println("Portanto não é necessário verificar a continuidade numericamente.\n");
+
+        System.out.println("Condição 2 - Mudança de sinal (f(left) × f(right) < 0):");
+        System.out.printf("f(%.10f) = %+.10e\n", left, fLeft);
+        System.out.printf("f(%.10f) = %+.10e\n", right, fRight);
+        System.out.printf("f(left) × f(right) = %.10e\n", fLeft * fRight);
+
+        if (fLeft * fRight < 0) System.out.println("Sinais opostos confirmados, portanto o método é aplicável \n");
+        else System.out.println("Não é possível aplicar o método da bisseção neste intervalo, por não apresentar sinais opostos.\n");
+
+        System.out.println("─── MÉTODO DE NEWTON ───\n");
+
+        double x0 = 0.85;
+
+        System.out.println("Condição 1 - Diferenciabilidade:");
+        System.out.println("f(x) = sen(x^2) + 1.1 - e^(-x) é diferenciável.");
+        System.out.println("f'(x) = 2x·cos(x^2) + e^(-x) existe e é contínua");
+        System.out.println("(composição de funções contínuas: seno, exp e polinômios).");
+        System.out.println("Logo a função é diferenciável em todo o intervalo.\n");
+
+        System.out.println("Condição 2 - f'(x) != 0 no intervalo:");
+        System.out.printf("Verificando f'(x0) com x0 = %.10f\n", x0);
+        System.out.printf("f'(%.10f) = %+.10e\n", x0, myobj.derivadaFx(x0));
+
+        if (Math.abs(myobj.derivadaFx(x0)) < 1e-15) {
+            System.out.println("Derivada muito perto de zero.\n");
+        } else {
+            System.out.println("f'(x0) != 0. Utilizamos limiar de 1e-15 para evitar");
+            System.out.println("erros de precisão numérica da aritmética de ponto flutuante.");
+            System.out.println("Logo o método é aplicável.\n");
+
+            System.out.println("\nGráfico se encontra no relatório.\n");
+        }
 
         System.out.println("\n--------------------------------------------------------");
         System.out.println("ITEM (b.ii) - utilizando epsilon = 5×10^-9");
@@ -218,9 +261,10 @@ class ex1 {
         System.out.printf("Iterações: %d\n", resBis.nIteracoes);
 
         System.out.println("\n─── MÉTODO DE NEWTON ───\n");
-        double x0 = left;
+        x0 = left;
         ansNewton resNewt = myobj.metodoNewton(x0, epsilon, 100);
         System.out.printf("\nRaiz: %.15f\n", resNewt.raiz);
+        System.out.printf("F(raiz): %.10e\n", myobj.funcaoFx(resNewt.raiz));
         System.out.printf("Iterações: %d\n", resNewt.nIteracoes);
     }
 }

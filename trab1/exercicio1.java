@@ -1,4 +1,4 @@
-import java.util.*;
+package trab1;
 
 class exercicio1{
 

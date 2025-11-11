@@ -1,3 +1,5 @@
+package trab1;
+
 import java.util.*;
 
 class exercicio2{

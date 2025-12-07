@@ -78,11 +78,11 @@ class splineCubicoNatural {
         mu[0] = 0.0;
         z[0] = 0.0;
 
-        // Decomposição LU
+        // Decomposição LU - Eliminação de Gauss para sistema tridiagonal
         for (int i = 1; i < nPontos - 1; i++) {
             // l[i] é o pivô (elemento diagonal de L) após eliminação de Gauss
             // Remove a contribuição do elemento anterior multiplicado por mu[i-1]
-            l[i] = 2.0 * (h[i - 1] + h[i]) - h[i - 1] * mu[i - 1];
+            l[i] = 2.0 * (h[i - 1] + h[i]) - (h[i - 1] * mu[i - 1]);
             // mu[i] é o fator da superdiagonal de U normalizado pelo pivô
             // Armazena o multiplicador para a substituição inversa
             mu[i] = h[i] / l[i];

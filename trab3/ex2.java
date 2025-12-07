@@ -80,19 +80,33 @@ class splineCubicoNatural {
 
         // Decomposição LU
         for (int i = 1; i < nPontos - 1; i++) {
+            // l[i] é o pivô (elemento diagonal de L) após eliminação de Gauss
+            // Remove a contribuição do elemento anterior multiplicado por mu[i-1]
             l[i] = 2.0 * (h[i - 1] + h[i]) - h[i - 1] * mu[i - 1];
+            // mu[i] é o fator da superdiagonal de U normalizado pelo pivô
+            // Armazena o multiplicador para a substituição inversa
             mu[i] = h[i] / l[i];
+            // z[i] é o termo do lado direito transformado pela decomposição
+            // Remove a influência do elemento anterior já processado
             z[i] = (alpha[i] - h[i - 1] * z[i - 1]) / l[i];
         }
 
-        l[nPontos - 1] = 1.0;
-        z[nPontos - 1] = 0.0;
-        c[nPontos - 1] = 0.0;
+        // Substituição inversa utilizada para encontrar coeficientes c
+        // (segunda derivada)
+        l[nPontos - 1] = 1.0; // Condição de spline natural
+        z[nPontos - 1] = 0.0; // Segunda derivada no ultimo ponto é zero
+        c[nPontos - 1] = 0.0; // Armazena o valor final encontrado
 
         for (int j = nPontos - 2; j >= 0; j--) {
+            // Calcula c de trás para frente, utilizando os já calculados à frente
+            // (substituição inversa)
             c[j] = z[j] - mu[j] * c[j + 1];
+            // Calcula coeficiente linear b[j] relacionado a diferença com as
+            // segundas derivadas
             b[j] = (a[j + 1] - a[j]) / h[j]
                     - h[j] * (c[j + 1] + 2.0 * c[j]) / 3.0;
+            // Calcula o coeficiente cúbico d[j], relacionado à variação das
+            // segundas derivadas, controlando entao a curvatura do polinomio
             d[j] = (c[j + 1] - c[j]) / (3.0 * h[j]);
         }
     }
@@ -145,14 +159,14 @@ public class ex2 {
 
         System.out.println("========== Evaporacao em Adelaide, Australia ==========");
 
-        System.out.printf("%-10s %-20s %-20s%n", "x", "p(x)", "s(x)");
-        System. out.println("───────────────────────────────────────────────────────");
+        System.out.println("x          p(x)                    s(x)");
+        System.out.println("───────────────────────────────────────────────────────");
 
         // de 1 ate 12 com alteracao de 0.5
         for (double mes = 1.0; mes <= 12.0; mes += 0.5) {
             double polinomioValor = poliInter.avaliar(mes);
             double splineValor = splineCubico.avaliar(mes);
-            System.out.printf("%-10.1f %-20.6f %-20.6f%n", mes, polinomioValor, splineValor);
+            System.out.printf("%.1f          %.6f                    %.6f%n", mes, polinomioValor, splineValor);
         }
         System.out.println();
         System.out.println("========== comparacao em ponto especifico ==========");
@@ -160,5 +174,22 @@ public class ex2 {
         System.out.println("mes = 5.5:");
         System.out.println("p(5.5) = " + poliInter.avaliar(5.5));
         System.out.println("s(5.5) = " + splineCubico.avaliar(5.5));
+        System.out.println();
+        System.out.println("───────────────────────────────────────────────────────");
+        System.out.println("Grafico realizado por meio do geogebra.");
+        System.out.println("───────────────────────────────────────────────────────");
+        System.out.println();
+        System.out.println("Comparacao entre os dois metodos (qual o mais aceitável?)");
+        System.out.println();
+        System.out.println("A Spline Cubica natural tende a ser mais " +
+                "aceitável principalmente pela interpolação consideravelmente mais suave.");
+        System.out.println("Consequência da utilização de derivadas contínuas"+
+                " até a segunda ordem nos pontos de dados, garantindo " +
+                "transições suaves e naturais.");
+        System.out.println("Além disso, mantém os valores dentro de limites " +
+                "mais realistas, evitando oscilações que ocorrem com o polinômio de Lagrange.");
+        System.out.println();
+        System.out.println("───────────────────────────────────────────────────────");
+
     }
 }
